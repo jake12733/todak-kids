@@ -384,7 +384,8 @@ button{border:0;background:none;cursor:pointer}
 .tk-card .cut::before{left:-13px}.tk-card .cut::after{right:-13px}
 .tk .lbl{font-weight:800;font-size:13.5px;color:rgba(31,42,68,.72)}
 .tk .big{font-family:var(--fe);font-weight:700;font-size:76px;line-height:1;margin:6px 0 4px}
-.tk .big.date{font-size:clamp(28px,3.6vw,40px);line-height:1.2}
+.tk .big.date{font-size:clamp(28px,3.6vw,40px);line-height:1.2;padding-right:110px}
+.tk .big.date small{display:block;font-size:.8em;color:rgba(31,42,68,.8)}
 .tk .sub{font-weight:800;font-size:15px}
 .tk .meta{display:grid;gap:6px;font-size:14.5px}
 .tk .meta div{display:flex;justify-content:space-between;gap:12px}
@@ -413,7 +414,7 @@ button{border:0;background:none;cursor:pointer}
 .hrow small{display:block;color:var(--mute);font-size:12.5px;font-weight:600}
 .hrow b{font-family:var(--fe);font-weight:600;white-space:nowrap}
 .hrow.today{color:var(--sky2)}
-.hrow.today>span:first-child::after{content:'오늘';display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--sky2);color:#fff;font-size:11px;vertical-align:2px}
+.hrow.today .dn::after{content:'오늘';display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--sky2);color:#fff;font-size:11px;vertical-align:2px}
 .hlive{display:flex;align-items:center;gap:9px;margin-top:18px;padding:14px 16px;border-radius:18px;background:var(--mintl);color:#18865F;font-weight:800;font-size:14.5px}
 .hlive.off{background:var(--berryl);color:#D9435F}
 .mapc{display:flex;flex-direction:column;gap:14px}
@@ -525,6 +526,7 @@ button{border:0;background:none;cursor:pointer}
   .types{grid-template-columns:repeat(2,1fr)}
   .times{grid-template-columns:repeat(4,1fr)}
   .tk .big{font-size:64px}
+  .tk .big.date{padding-right:88px}
   .snew{width:84px;height:84px;font-size:13px}
   .pt2{padding:20px 20px;border-radius:24px}
   .pill-st{font-size:13px;padding:9px 14px}
@@ -880,9 +882,9 @@ button{border:0;background:none;cursor:pointer}
     <div class="vis">
       <div class="hours rv">
         <h4>진료 시간</h4>
-        <div class="hrow" data-d="1,2,3,4,5"><span>월 ~ 금<small>점심 13:00 ~ 14:00</small></span><b>09:00 ~ 21:00</b></div>
-        <div class="hrow" data-d="6"><span>토요일<small>점심시간 없이 진료</small></span><b>09:00 ~ 15:00</b></div>
-        <div class="hrow" data-d="0"><span>일요일 · 공휴일<small>오전 진료</small></span><b>09:00 ~ 13:00</b></div>
+        <div class="hrow" data-d="1,2,3,4,5"><span><span class="dn">월 ~ 금</span><small>점심 13:00 ~ 14:00</small></span><b>09:00 ~ 21:00</b></div>
+        <div class="hrow" data-d="6"><span><span class="dn">토요일</span><small>점심시간 없이 진료</small></span><b>09:00 ~ 15:00</b></div>
+        <div class="hrow" data-d="0"><span><span class="dn">일요일 · 공휴일</span><small>오전 진료</small></span><b>09:00 ~ 13:00</b></div>
         <div class="hrow" data-d="x"><span>휴진</span><b style="font-family:var(--fb)">설·추석 당일</b></div>
         <div class="hlive" id="hlive"><i class="dot"></i><span id="hliveT">진료 상태 확인 중</span></div>
       </div>
@@ -1225,7 +1227,7 @@ function showTicket(b,fresh){cur=b;clearInterval(cdTimer);
     if(b.open){let ahead=b.ahead;const upd=()=>{$('#tkS').textContent=ahead>0?`내 앞 ${ahead}명 · 예상 약 ${ahead*4}분`:'지금 진료실 앞으로 와 주세요';};upd();
       if(fresh)cdTimer=setInterval(()=>{ahead=Math.max(0,ahead-1);upd();if(ahead===2)toast('곧 차례예요! 10분 안에 병원에 도착해 주세요 (알림 미리보기)');if(ahead===0)clearInterval(cdTimer);},6000);}
     else $('#tkS').textContent=`${b.next} 진료 시작 후 순서대로 불러 드려요`;}
-  else{$('#tkL').textContent='예약 완료';$('#tkB').className='big date';$('#tkB').textContent=`${fmtS(parseISO(b.date))} ${b.time}`;$('#tkS').textContent='10분 먼저 와서 체온부터 재요';}
+  else{$('#tkL').textContent='예약 완료';$('#tkB').className='big date';$('#tkB').innerHTML=`${fmtS(parseISO(b.date))}<small>${b.time}</small>`;$('#tkS').textContent='10분 먼저 와서 체온부터 재요';}
   const rows=[['아이',`${b.name} · ${b.age}`],['진료',b.type],['불편한 곳',b.sym.length?b.sym.join(', '):'-'],['접수번호',b.id],['연락처',b.phone]];
   $('#tkM').innerHTML=rows.map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
   const sn=$('#snew');sn.classList.remove('go');sn.style.opacity=fresh?'':'1';if(fresh){void sn.offsetWidth;sn.classList.add('go');}
